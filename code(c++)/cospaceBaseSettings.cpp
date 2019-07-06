@@ -1,4 +1,4 @@
-#include "cospaceBaseSettings.hpp"
+#include "cospaceBasicSettings.hpp"
 
 char AI_MyID[2] = {'0', '2'};
 int Duration = 0;
@@ -30,6 +30,7 @@ int WheelRight = 0;
 int LED_1 = 0;
 int MyState = 0;
 int AI_SensorNum = 13;
+int loaded_objects[4];
 
 enum Action action;
 

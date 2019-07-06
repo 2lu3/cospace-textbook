@@ -1,6 +1,6 @@
 #include "cospaceBasicSettings.hpp"
-#include "world1.hpp"
-#include "world2.hpp"
+#include "world1-level1.hpp"
+#include "world2-level1.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS 1
 

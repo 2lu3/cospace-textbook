@@ -24,7 +24,7 @@ enum Mode
 #define CYAN_LOADED_ID 1
 #define BLACK_LOADED_ID 2
 #define SUPER_LOADED_ID 3
-int loaded_objects[4];
+extern int loaded_objects[4];
 
 #define DLL_EXPORT extern "C" __declspec(dllexport)
 #define false 0

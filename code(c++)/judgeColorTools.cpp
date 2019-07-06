@@ -15,21 +15,22 @@ int white_zone[3][2] = {{204, 235}, {217, 248}, {255, 255}};
 int world1_maker[3][2] = {{188, 216}, {58, 66}, {230, 254}};
 int blue_trap[3][2] = {{54, 62}, {97, 111}, {221, 245}};
 
-int colororJudgeLeft(int color[3][2])
+int ColorJudgeLeft(int color[3][2])
 {
     return (color[0][0] - coloror_width <= CSLeft_R && CSLeft_R <= color[0][0] + coloror_width && color[1][0] - coloror_width <= CSLeft_G && CSLeft_G <= color[1][0] + coloror_width && color[2][0] - coloror_width <= CSLeft_B && CSLeft_B <= color[2][0] + coloror_width) ||
            (color[0][1] - coloror_width <= CSLeft_R && CSLeft_R <= color[0][1] + coloror_width && color[1][1] - coloror_width <= CSLeft_G && CSLeft_G <= color[1][1] + coloror_width && color[2][1] - coloror_width <= CSLeft_B && CSLeft_B <= color[2][1] + coloror_width);
 }
-int colororJudgeRight(int color[3][2])
+int ColorJudgeRight(int color[3][2])
 {
     return (color[0][0] - coloror_width <= CSRight_R && CSRight_R <= color[0][0] + coloror_width && color[1][0] - coloror_width <= CSRight_G && CSRight_G <= color[1][0] + coloror_width && color[2][0] - coloror_width <= CSRight_B && CSRight_B <= color[2][0] + coloror_width) ||
            (color[0][1] - coloror_width <= CSRight_R && CSRight_R <= color[0][1] + coloror_width && color[1][1] - coloror_width <= CSRight_G && CSRight_G <= color[1][1] + coloror_width && color[2][1] - coloror_width <= CSRight_B && CSRight_B <= color[2][1] + coloror_width);
 }
-int EithercolororJudge(int color[3][2])
+
+int EitherColorJudge(int color[3][2])
 {
-    return colororJudgeLeft(color) || colororJudgeRight(color);
+    return ColorJudgeLeft(color) || ColorJudgeRight(color);
 }
-int BothcolororJudge(int color[3][2])
+int BothColorJudge(int color[3][2])
 {
-    return colororJudgeLeft(color) && colororJudgeRight(color);
+    return ColorJudgeLeft(color) && ColorJudgeRight(color);
 }

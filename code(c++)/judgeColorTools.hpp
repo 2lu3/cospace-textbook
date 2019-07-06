@@ -15,9 +15,9 @@ extern int purple_line[3][2];
 extern int white_zone[3][2];
 extern int blue_trap[3][2];
 
-int ColorJudgeLeft(int col[3][2]);
-int ColorJudgeRight(int col[3][2]);
-int EitherColorJudge(int col[3][2]);
-int BothColorJudge(int col[3][2]);
+int ColorJudgeLeft(int coloror[3][2]);
+int ColorJudgeRight(int color[3][2]);
+int EitherColorJudge(int color[3][2]);
+int BothColorJudge(int color[3][2]);
 
 #endif // !JUDGE_COLOR_TOOLS
