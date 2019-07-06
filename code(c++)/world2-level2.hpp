@@ -1,10 +1,10 @@
-#ifndef WORLD2_LEVEL1_HPP
-#define WORLD2_LEVEL1_HPP
+#ifndef WORLD2_LEVEL2_HPP
+#define WORLD2_LEVEL2_HPP
 
 #include "cospaceBasicSettings.hpp"
 #include "judgeColorTools.hpp"
 
-class World2
+class World2Level2
 {
 public:
     void setup();
@@ -18,4 +18,4 @@ private:
     void GoToPosition(int x, int y);
 };
 
-#endif //!WORLD2_LEVEL1_HPP
+#endif //!WORLD2_LEVEL2_HPP

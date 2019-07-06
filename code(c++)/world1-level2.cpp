@@ -1,39 +1,51 @@
-#include "world1-level1.hpp"
+#include "World1-level2.hpp"
 
 #define FOR for
 #define rep(i, n) FOR(int i = 0; i < n; i++)
 
 using namespace std;
 
-void World1::setup()
+void World1Level2::setup()
 {
+    LoadedObjects = 0;
 }
 
-void World1::loop()
+void World1Level2::loop()
 {
+    // the spare space of storeable objects if you have at least 1 object for each color
+    // それぞれの色のオブジェクトを、最低1つもつときに、まだ余っているオブジェクトを積めるスペース
+    int load_object_spare = 6;
+    load_object_spare -= LoadedObjects;
+    if (loaded_objects[RED_LOADED_ID] == 0)
+    {
+        load_object_spare--;
+    }
+    if (loaded_objects[CYAN_LOADED_ID] == 0)
+    {
+        load_object_spare--;
+    }
+    if (loaded_objects[BLACK_LOADED_ID] == 0)
+    {
+        load_object_spare--;
+    }
+
     if (SuperDuration > 0)
     {
         SuperDuration--;
     }
-    // If the the robot is on the Red Object and The number of red loaded objects is less than 2
-    // もしレッドオブジェクトの上にいて、すでに持っているレッドオブジェクトが2こ以下の場合
-    else if (EitherColorJudge(red_obj) && loaded_objects[RED_LOADED_ID] < 2)
+    else if (EitherColorJudge(red_obj) && (loaded_objects[RED_LOADED_ID] < 2 || load_object_spare > 0) && LoadedObjects < 6)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
         loaded_objects[RED_LOADED_ID]++;
     }
-    // If the robot is on the Cyan Object and The number of Cyan loaded objects is less than 2
-    // もし、シアンオブジェクトの上にいて、すでに持っているシアンオブジェクトの数が2こより少ない場合
-    else if (EitherColorJudge(cyan_obj) && loaded_objects[RED_LOADED_ID] < 2)
+    else if (EitherColorJudge(cyan_obj) && (loaded_objects[RED_LOADED_ID] < 2 || load_object_spare > 0) && LoadedObjects < 6)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
         loaded_objects[CYAN_LOADED_ID]++;
     }
-    // If the robot is on the Black Object and The number of Cyan loaded objects is less than 2
-    // もし、ブラックオブジェクトの上にいて、すでに持っているブラックオブジェクトの数が2こより少ない場合
-    else if (EitherColorJudge(black_obj) && loaded_objects[RED_LOADED_ID] < 2)
+    else if (EitherColorJudge(black_obj) && (loaded_objects[RED_LOADED_ID] < 2 || load_object_spare > 0) && LoadedObjects < 6)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
@@ -41,50 +53,65 @@ void World1::loop()
     }
     else if (EitherColorJudge(object_box) && LoadedObjects != 0)
     {
-        // To Deposit, both color sensors are must in deposit area
         if (BothColorJudge(object_box))
         {
-            // If both color sensors are in deposit area
-            // もし、両方のセンサがDepositエリアに入っている場合
             action = DEPOSIT_OBJ;
             SuperDuration = 50;
         }
         else if (ColorJudgeLeft(object_box))
         {
-            // If only left sensor is in deopsit area
-            // 左側のセンサだけがDepositエリアにある場合
             motor(0, 3);
         }
         else
         {
-            // If only right sensor is in deposit area
-            // 右側のセンサだけがDepositエリアにある場合
             motor(3, 0);
         }
     }
-    // If the robot is on the yellow
-    // ロボットが黄色いトラップの上の場合
-    else if (EitherColorJudge(trap_line))
+    else if (EitherColorJudge(trap_line) && LoadedObjects != 0)
     {
-        motor(-3, 3);
+        if (BothColorJudge(trap_line))
+        {
+            motor(-3, -3);
+        }
+        else if (ColorJudgeLeft(trap_line))
+        {
+            motor(3, -3);
+        }
+        else
+        {
+            motor(-3, 3);
+        }
     }
     else if (Duration > 0)
     {
         Duration--;
     }
-    else if (US_Left < 10 || US_Front < 10 || US_Right < 10)
-    {
-        // If the robot is near the wall, turn left
-        // 壁が近くにある場合、よける
-        motor(-3, 3);
-
-        // If you know a lot about c++, you should use this function
-        // もし、C++をよく知っているなら、次のようにしてください
-        // else if(obstacle(10, 10, 10))
-    }
     else
     {
-        motor(3, 3);
+        if (US_Front < 16 || US_Left < 10)
+        {
+            motor(-2, 2);
+        }
+        else if (US_Right < 8)
+        {
+            motor(-3, -1);
+        }
+        else if (US_Right < 15)
+        {
+            motor(2, 5);
+        }
+        else if (US_Right < 30)
+        {
+            motor(5, 3);
+        }
+        else if (US_Left < 60)
+        {
+            motor(5, 2);
+        }
+        else
+        {
+            motor(4, 3);
+        }
     }
 
     switch (action)
@@ -140,12 +167,12 @@ void World1::loop()
     }
 }
 
-int World1::shouldTeleport()
+int World1Level2::shouldTeleport()
 {
     return 180 < Time && !EitherColorJudge(object_box);
 }
 
-void World1::taskOnTeleport()
+void World1Level2::taskOnTeleport()
 {
     LoadedObjects = 0;
     rep(i, static_cast<int>(extent<decltype(loaded_objects), 0>::value))

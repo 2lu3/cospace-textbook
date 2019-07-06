@@ -1,15 +1,10 @@
-#include "world1-level1.hpp"
+#include "world2-level2.hpp"
 
-#define FOR for
-#define rep(i, n) FOR(int i = 0; i < n; i++)
-
-using namespace std;
-
-void World1::setup()
+void World2Level2::setup()
 {
 }
 
-void World1::loop()
+void World2Level2::loop()
 {
     if (SuperDuration > 0)
     {
@@ -53,13 +48,13 @@ void World1::loop()
         {
             // If only left sensor is in deopsit area
             // 左側のセンサだけがDepositエリアにある場合
-            motor(0, 3);
+            motor(3, 0);
         }
         else
         {
             // If only right sensor is in deposit area
             // 右側のセンサだけがDepositエリアにある場合
-            motor(3, 0);
+            motor(0, 3);
         }
     }
     // If the robot is on the yellow
@@ -84,7 +79,45 @@ void World1::loop()
     }
     else
     {
-        motor(3, 3);
+        if (process == 0)
+        {
+            if (!(20 < PositionX && PositionX <= 30 && 20 < PositionY && PositionY <= 30))
+            {
+                // If the robot is not in the target area
+                GoToPosition(25, 25);
+            }
+            else
+            {
+                // If the robot is in the target area
+                process++;
+            }
+        }
+        else if (process == 1)
+        {
+            if (!(80 < PositionX && PositionX <= 90 && 20 < PositionY && PositionY <= 30))
+            {
+                GoToPosition(85, 25);
+            }
+            else
+            {
+                process++;
+            }
+        }
+        else if (process == 2)
+        {
+            if (!(200 < PositionX && PositionX <= 220 && 160 < PositionY && PositionY <= 180))
+            {
+                GoToPosition(210, 170);
+            }
+            else
+            {
+                process = 0;
+            }
+        }
+        else
+        {
+            process = 0;
+        }
     }
 
     switch (action)
@@ -140,19 +173,77 @@ void World1::loop()
     }
 }
 
-int World1::shouldTeleport()
+void World2Level2::GoToAngle(int angle)
 {
-    return 180 < Time && !EitherColorJudge(object_box);
+    angle = angle - Compass;
+    angle %= 360;
+    if (angle < -180)
+    {
+        angle += 360;
+    }
+    if (angle > 180)
+    {
+        angle -= 360;
+    }
+
+    // If the angle > 0, the target angle is on your left side
+    // If the angle < 0, the traget angle is on your right side
+    // angleが0より大きいなら、目的の方向はロボットからみて左側にある
+    // angleが0より小さいなら、目的の方向はロボットから見て右側にある
+
+    // abs(number) function gives the absolute value of number
+    // abs(数字)関数は、数字の絶対値を返す
+    if (abs(angle) < 10)
+    {
+        // If the target angle is on your front
+        // 目的の方向が今向いている方向なら
+        motor(5, 5);
+    }
+    else if (abs(angle) < 30)
+    {
+        if (angle < 0)
+        {
+            motor(5, 4);
+        }
+        else
+        {
+            motor(4, 5);
+        }
+    }
+    else if (abs(angle) < 100)
+    {
+        if (angle < 0)
+        {
+            motor(5, 2);
+        }
+        else
+        {
+            motor(2, 5);
+        }
+    }
+    else
+    {
+        if (angle < 0)
+        {
+            motor(3, -3);
+        }
+        else
+        {
+            motor(-3, 3);
+        }
+    }
 }
 
-void World1::taskOnTeleport()
+// Problems 問題点
+// If the robot is in Position Lost Area
+// もし、ロボットが座標喪失エリアにいたら？
+
+void World2Level2::GoToPosition(int x, int y)
 {
-    LoadedObjects = 0;
-    rep(i, static_cast<int>(extent<decltype(loaded_objects), 0>::value))
-    {
-        loaded_objects[i] = 0;
-    }
-    // teleport location
-    Teleport = 1;
-    CurGame = 1;
+    x = x - PositionX;
+    y = y - PositionY;
+    // There is 90 degrees difference between math degree and cospace angle
+    // 数学上での角と、Cospaceの角度には90度の差がある
+    int angle = static_cast<int>((atan2(y, x) / M_PI * 180.0)) - 90;
+    GoToAngle(angle);
 }

@@ -30,7 +30,7 @@ int WheelRight = 0;
 int LED_1 = 0;
 int MyState = 0;
 int AI_SensorNum = 13;
-int loaded_objects[4];
+int loaded_objects[4] = {0, 0, 0, 0};
 
 enum Action action;
 
