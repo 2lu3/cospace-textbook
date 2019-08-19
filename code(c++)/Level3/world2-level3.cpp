@@ -1,33 +1,39 @@
-#include "world2-level2.hpp"
+#include "world2-level3.hpp"
 
-void World2Level2::setup()
+void World2Level3::setup()
 {
 }
 
-void World2Level2::loop()
+void World2Level3::loop()
 {
+    // for position lost area
+    if (PositionX != 0 || PositionY != 0)
+    {
+        pos_x = PositionX;
+        pos_y = PositionY;
+    }
+    else
+    {
+        // in position lost area
+        PositionX = -1;
+    }
+
     if (SuperDuration > 0)
     {
         SuperDuration--;
     }
-    // If the the robot is on the Red Object and The number of red loaded objects is less than 2
-    // もしレッドオブジェクトの上にいて、すでに持っているレッドオブジェクトが2こ以下の場合
     else if (EitherColorJudge(red_obj) && loaded_objects[RED_LOADED_ID] < 2)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
         loaded_objects[RED_LOADED_ID]++;
     }
-    // If the robot is on the Cyan Object and The number of Cyan loaded objects is less than 2
-    // もし、シアンオブジェクトの上にいて、すでに持っているシアンオブジェクトの数が2こより少ない場合
     else if (EitherColorJudge(cyan_obj) && loaded_objects[CYAN_LOADED_ID] < 2)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
         loaded_objects[CYAN_LOADED_ID]++;
     }
-    // If the robot is on the Black Object and The number of Cyan loaded objects is less than 2
-    // もし、ブラックオブジェクトの上にいて、すでに持っているブラックオブジェクトの数が2こより少ない場合
     else if (EitherColorJudge(black_obj) && loaded_objects[BLACK_LOADED_ID] < 2)
     {
         action = FIND_OBJ;
@@ -36,29 +42,20 @@ void World2Level2::loop()
     }
     else if (EitherColorJudge(object_box) && LoadedObjects != 0)
     {
-        // To Deposit, both color sensors are must in deposit area
         if (BothColorJudge(object_box))
         {
-            // If both color sensors are in deposit area
-            // もし、両方のセンサがDepositエリアに入っている場合
             action = DEPOSIT_OBJ;
             SuperDuration = 50;
         }
         else if (ColorJudgeLeft(object_box))
         {
-            // If only left sensor is in deopsit area
-            // 左側のセンサだけがDepositエリアにある場合
             motor(3, 0);
         }
         else
         {
-            // If only right sensor is in deposit area
-            // 右側のセンサだけがDepositエリアにある場合
             motor(0, 3);
         }
     }
-    // If the robot is on the yellow
-    // ロボットが黄色いトラップの上の場合
     else if (EitherColorJudge(trap_line))
     {
         motor(-3, 3);
@@ -66,16 +63,6 @@ void World2Level2::loop()
     else if (Duration > 0)
     {
         Duration--;
-    }
-    else if (US_Left < 10 || US_Front < 10 || US_Right < 10)
-    {
-        // If the robot is near the wall, turn left
-        // 壁が近くにある場合、よける
-        motor(-3, 3);
-
-        // If you know a lot about c++, you should use this function
-        // もし、C++をよく知っているなら、次のようにしてください
-        // else if(obstacle(10, 10, 10))
     }
     else
     {
@@ -159,7 +146,7 @@ void World2Level2::loop()
     }
 }
 
-void World2Level2::GoToAngle(int angle)
+void World2Level3::GoToAngle(int angle)
 {
     angle = angle - Compass;
     angle %= 360;
@@ -172,70 +159,114 @@ void World2Level2::GoToAngle(int angle)
         angle -= 360;
     }
 
+    int classification = obstacle(10, 10, 10);
+    switch (classification)
+    {
+    case 0:
+        // abs(number) function gives the absolute value of number
+        // abs(数字)関数は、数字の絶対値を返す
+        if (abs(angle) < 10)
+        {
+            // If the target angle is on your front
+            // 目的の方向が今向いている方向なら
+            motor(5, 5);
+        }
+        else if (abs(angle) < 30)
+        {
+            if (angle < 0)
+            {
+                motor(5, 4);
+            }
+            else
+            {
+                motor(4, 5);
+            }
+        }
+        else if (abs(angle) < 100)
+        {
+            if (angle < 0)
+            {
+                motor(5, 2);
+            }
+            else
+            {
+                motor(2, 5);
+            }
+        }
+        else
+        {
+            if (angle < 0)
+            {
+                motor(3, -3);
+            }
+            else
+            {
+                motor(-3, 3);
+            }
+        }
+        break;
+
+    case 1: // left
+        motor(-3, -5);
+        break;
+    case 2: // front
+        motor(-5, -5);
+        break;
+    case 3: //left & front
+        motor(-3, -5);
+    case 4: // right
+        motor(-5, -3);
+    case 5: // left & right
+        motor(3, 3);
+    case 6: // front & right
+        motor(-5, -3);
+    case 7: // all
+        motor(-5, 5);
+        break;
+    default:
+        break;
+    }
+
     // If the angle > 0, the target angle is on your left side
     // If the angle < 0, the traget angle is on your right side
     // angleが0より大きいなら、目的の方向はロボットからみて左側にある
     // angleが0より小さいなら、目的の方向はロボットから見て右側にある
-
-    // abs(number) function gives the absolute value of number
-    // abs(数字)関数は、数字の絶対値を返す
-    if (abs(angle) < 10)
-    {
-        // If the target angle is on your front
-        // 目的の方向が今向いている方向なら
-        motor(5, 5);
-    }
-    else if (abs(angle) < 30)
-    {
-        if (angle < 0)
-        {
-            motor(5, 4);
-        }
-        else
-        {
-            motor(4, 5);
-        }
-    }
-    else if (abs(angle) < 100)
-    {
-        if (angle < 0)
-        {
-            motor(5, 2);
-        }
-        else
-        {
-            motor(2, 5);
-        }
-    }
-    else
-    {
-        if (angle < 0)
-        {
-            motor(3, -3);
-        }
-        else
-        {
-            motor(-3, 3);
-        }
-    }
 }
 
 // Problems 問題点
 // If the robot is in Position Lost Area
 // もし、ロボットが座標喪失エリアにいたら？
 
-bool World2Level2::GoToPosition(int x, int y, int wide_judge_arrived)
+bool World2Level3::GoToPosition(int x, int y, int wide_judge_arrived)
 {
-    if (x - wide_judge_arrived < PositionX && PositionX < x + wide_judge_arrived && y - wide_judge_arrived < PositionY && PositionY < y + wide_judge_arrived)
+    if (x - wide_judge_arrived < pos_x && pos_x < x + wide_judge_arrived && y - wide_judge_arrived < pos_t && pos_t < y + wide_judge_arrived)
     {
         motor(0, 0);
         return true;
     }
-    x = x - PositionX;
-    y = y - PositionY;
+    x = x - pos_x;
+    y = y - pos_y;
     // There is 90 degrees difference between math degree and cospace angle
     // 数学上での角と、Cospaceの角度には90度の差がある
     int angle = static_cast<int>((atan2(y, x) / M_PI * 180.0)) - 90;
     GoToAngle(angle);
     return false;
+}
+
+int World2Level3::obstacle(int left, int front, int right)
+{
+    int ans = 0;
+    if (left < US_Left)
+    {
+        ++ans;
+    }
+    if (front < US_Front)
+    {
+        ans += 2;
+    }
+    if (right < US_Right)
+    {
+        ans += 4;
+    }
+    return ans;
 }

@@ -20,7 +20,7 @@ void World2::loop()
     }
     // If the robot is on the Cyan Object and The number of Cyan loaded objects is less than 2
     // もし、シアンオブジェクトの上にいて、すでに持っているシアンオブジェクトの数が2こより少ない場合
-    else if (EitherColorJudge(cyan_obj) && loaded_objects[RED_LOADED_ID] < 2)
+    else if (EitherColorJudge(cyan_obj) && loaded_objects[CYAN_LOADED_ID] < 2)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
@@ -28,7 +28,7 @@ void World2::loop()
     }
     // If the robot is on the Black Object and The number of Cyan loaded objects is less than 2
     // もし、ブラックオブジェクトの上にいて、すでに持っているブラックオブジェクトの数が2こより少ない場合
-    else if (EitherColorJudge(black_obj) && loaded_objects[RED_LOADED_ID] < 2)
+    else if (EitherColorJudge(black_obj) && loaded_objects[BLACK_LOADED_ID] < 2)
     {
         action = FIND_OBJ;
         SuperDuration = kFindObjDuration;
