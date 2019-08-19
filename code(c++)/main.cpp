@@ -1,8 +1,14 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "cospaceBasicSettings.hpp"
 #include "Level1/world1-level1.hpp"
 #include "Level1/world2-level1.hpp"
 #include "Level2/world1-level2.hpp"
 #include "Level2/world2-level2.hpp"
+#include "Level3/world2-level3.hpp"
+#include "Level4/world2.hpp"
+#include "Level5/world2.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
@@ -15,6 +21,15 @@ World2 game1;
 // level2に挑戦するときは、アンコメントしてください
 // World1Level2 game0;
 // World2Level2 game1;
+
+// World1Level3 game0;
+// World2Level3 game1;
+
+// World1Level4 game0;
+// World2Level4 game1;
+
+// World1Level5 game0;
+// World2Level5 game1;
 
 using namespace std;
 

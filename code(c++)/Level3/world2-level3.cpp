@@ -239,7 +239,7 @@ void World2Level3::GoToAngle(int angle)
 
 bool World2Level3::GoToPosition(int x, int y, int wide_judge_arrived)
 {
-    if (x - wide_judge_arrived < pos_x && pos_x < x + wide_judge_arrived && y - wide_judge_arrived < pos_t && pos_t < y + wide_judge_arrived)
+    if (x - wide_judge_arrived < pos_x && pos_x < x + wide_judge_arrived && y - wide_judge_arrived < pos_y && pos_y < y + wide_judge_arrived)
     {
         motor(0, 0);
         return true;

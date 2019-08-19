@@ -1,10 +1,12 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "world2.hpp"
 
-void World2Level4::setup()
+void World2Level5::setup()
 {
 }
 
-void World2Level4::loop()
+void World2Level5::loop()
 {
     // for position lost area
     if (PositionX != 0 || PositionY != 0)
@@ -86,21 +88,42 @@ void World2Level4::loop()
     {
         if (process == 0)
         {
-            if (GoToPosition(25, 25, 10))
+            if (GoToPosition(25, 25, 10, 10, 10))
             {
                 ++process;
             }
         }
         else if (process == 1)
         {
-            if (GoToPosition(85, 25, 10))
+            if (GoToPosition(85, 25, 10, 10, 10))
             {
                 ++process;
             }
         }
         else if (process == 2)
         {
-            if (GoToPosition(210, 170, 10))
+            if (GoToPosition(210, 170, 10, 10, 10))
+            {
+                if (LoadedObjects < 6)
+                {
+                    process += 2;
+                }
+                else
+                {
+                    ++process;
+                }
+            }
+        }
+        else if (process == 3)
+        {
+            if (GoToPosition(100, 100, 10, 10, 10)) // deposit area
+            {
+                process = 0;
+            }
+        }
+        else if (process == 4)
+        {
+            if (GoToPosition(300, 20, 10, 10, 10))
             {
                 process = 0;
             }
@@ -164,7 +187,7 @@ void World2Level4::loop()
     }
 }
 
-void World2Level4::GoToSuperObj()
+void World2Level5::GoToSuperObj()
 {
     static int loop_num = 0;
 
@@ -175,11 +198,11 @@ void World2Level4::GoToSuperObj()
         log_super_y = -1;
     }
 
-    GoToPosition(log_super_x, log_super_y, 10);
+    GoToPosition(log_super_x, log_super_y, 10, 10, 10);
     ++loop_num;
 }
 
-void World2Level4::GoToAngle(int angle)
+void World2Level5::GoToAngle(int angle)
 {
     angle = angle - Compass;
     angle %= 360;
@@ -270,15 +293,32 @@ void World2Level4::GoToAngle(int angle)
 // If the robot is in Position Lost Area
 // もし、ロボットが座標喪失エリアにいたら？
 
-bool World2Level4::GoToPosition(int x, int y, int wide_judge_arrived)
+bool World2Level5::GoToPosition(int x, int y, int wide_x, int wide_y, int wide_judge_arrived)
 {
+    static int absolute_x = -1, absolute_y;
     if (x - wide_judge_arrived < pos_x && pos_x < x + wide_judge_arrived && y - wide_judge_arrived < pos_y && pos_y < y + wide_judge_arrived)
     {
         motor(0, 0);
         return true;
     }
-    x = x - pos_x;
-    y = y - pos_y;
+
+    if (!(x - wide_x < absolute_x &&
+          absolute_x < x + wide_x &&
+          y - wide_y < absolute_y &&
+          absolute_y < y + wide_y))
+    {
+        absolute_x = -1;
+    }
+
+    if (absolute_x == -1)
+    {
+
+        absolute_x = x - wide_x + rnd() % (wide_x * 2);
+        absolute_y = y - wide_y + rnd() % (wide_y * 2);
+    }
+
+    x = absolute_x - pos_x;
+    y = absolute_y - pos_y;
     // There is 90 degrees difference between math degree and cospace angle
     // 数学上での角と、Cospaceの角度には90度の差がある
     int angle = static_cast<int>((atan2(y, x) / M_PI * 180.0)) - 90;
@@ -286,7 +326,7 @@ bool World2Level4::GoToPosition(int x, int y, int wide_judge_arrived)
     return false;
 }
 
-int World2Level4::obstacle(int left, int front, int right)
+int World2Level5::obstacle(int left, int front, int right)
 {
     int ans = 0;
     if (left < US_Left)
