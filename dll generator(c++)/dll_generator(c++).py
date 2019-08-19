@@ -63,7 +63,7 @@ def main():
         exit()
 
     # .cファイル一覧を作成する
-    fileList = glob.glob(code_path + "*.cpp")
+    fileList = glob.glob(code_path + "**/*.cpp", recursive=True)
     printforDebug(fileList)
 
     # dll作成コマンドを作成する
@@ -72,7 +72,8 @@ def main():
     # -Wextra 追加の警告オプションをonにする
     command = "\"" + "g++" + "\"" + " -shared -static "
     if optimisation_level != 0:
-        command += '-O' + str(optimisation_level) + ' ' + '--param max-inline-insns-single=1000 '
+        command += '-O' + str(optimisation_level) + ' ' + \
+            '--param max-inline-insns-single=1000 '
     if is_lite_warming:
         command = command + '-Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wconversion -Wdisabled-optimization -Wendif-labels -Wfloat-equal -Winit-self -Winline -Wlogical-op -Wmissing-include-dirs -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wswitch-default -Wswitch-enum -Wunsafe-loop-optimizations -Wvariadic-macros -Wwrite-strings'
 

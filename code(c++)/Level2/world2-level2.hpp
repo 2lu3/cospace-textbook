@@ -1,8 +1,8 @@
 #ifndef WORLD2_LEVEL2_HPP
 #define WORLD2_LEVEL2_HPP
 
-#include "cospaceBasicSettings.hpp"
-#include "judgeColorTools.hpp"
+#include "./../cospaceBasicSettings.hpp"
+#include "./../judgeColorTools.hpp"
 
 class World2Level2
 {

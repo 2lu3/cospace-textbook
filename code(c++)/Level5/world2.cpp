@@ -270,12 +270,16 @@ void World2Level5::GoToAngle(int angle)
         break;
     case 3: //left & front
         motor(-3, -5);
+        break;
     case 4: // right
         motor(-5, -3);
+        break;
     case 5: // left & right
         motor(3, 3);
+        break;
     case 6: // front & right
         motor(-5, -3);
+        break;
     case 7: // all
         motor(-5, 5);
         break;

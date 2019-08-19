@@ -3,8 +3,8 @@
 
 #include <random>
 
-#include "cospaceBasicSettings.hpp"
-#include "judgeColorTools.hpp"
+#include "./../cospaceBasicSettings.hpp"
+#include "./../judgeColorTools.hpp"
 
 class World2Level5
 {
