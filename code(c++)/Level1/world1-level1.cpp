@@ -112,6 +112,10 @@ void World1::loop()
         LED_1 = 2;
         MyState = 0;
         LoadedObjects = 0;
+        for (int &num : loaded_objects)
+        {
+            num = 0;
+        }
         if (Duration <= 6 && SuperDuration <= 6)
         {
             // When I finish Deposit, I back
