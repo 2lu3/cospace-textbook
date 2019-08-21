@@ -260,15 +260,15 @@ bool World2Level3::GoToPosition(int x, int y, int wide_judge_arrived)
 int World2Level3::obstacle(int left, int front, int right)
 {
     int ans = 0;
-    if (left < US_Left)
+    if (US_Left < left)
     {
         ++ans;
     }
-    if (front < US_Front)
+    if (US_Front < front)
     {
         ans += 2;
     }
-    if (right < US_Right)
+    if (US_Right < right)
     {
         ans += 4;
     }
