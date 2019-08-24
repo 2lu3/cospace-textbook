@@ -194,6 +194,14 @@ void World2Level5::loop()
 void World2Level5::GoToSuperObj()
 {
     static int loop_num = 0;
+    static int prev_time = 0;
+
+    // if there is a time difference
+    if (prev_time + 5 <= Time)
+    {
+        prev_time = 0;
+        loop_num = 0;
+    }
 
     // 30s * 1000 / 60 = ms
     if (loop_num >= (30 * 1000 / 60))
